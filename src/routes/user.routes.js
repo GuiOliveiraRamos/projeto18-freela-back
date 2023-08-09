@@ -6,6 +6,6 @@ import { signIn, signUp } from "../controllers/signup.controllers.js";
 const signRoutes = Router();
 
 signRoutes.post("/signup", schemaValidation(schemaSignUp), signUp);
-signRoutes.post("/signin", schemaValidation(schemaSignIn), signIn);
+signRoutes.post("/", schemaValidation(schemaSignIn), signIn);
 
 export default signRoutes;
