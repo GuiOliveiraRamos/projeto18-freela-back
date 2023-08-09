@@ -12,8 +12,7 @@ export async function signUp(req, res) {
     if (result.rowCount > 0)
       return res.status(409).send("Usuário já cadastrado");
 
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(password, saltRounds);
+    const hash = bcrypt.hashSync(password, 10);
 
     const insertUserQuery = `INSERT INTO users (name, phone, cpf, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, now(), now())`;
     const getUserValues = [name, phone, cpf, email, hash];
@@ -28,15 +27,15 @@ export async function signIn(req, res) {
   const { email, password } = req.body;
 
   try {
-    const userQuery = `SELECT id FROM users WHERE email = $1`;
+    const userQuery = `SELECT id, password FROM users WHERE email = $1`;
     const getUserValues = [email];
     const userResult = await db.query(userQuery, getUserValues);
 
     if (userResult.rowCount === 0) return res.sendStatus(401);
 
     const user = userResult.rows[0];
-
-    const validatePassword = await bcrypt.compare(password, user.password);
+    const hashedPassword = user.password;
+    const validatePassword = bcrypt.compareSync(password, hashedPassword);
 
     if (!validatePassword) return res.sendStatus(401);
 
