@@ -1,27 +1,26 @@
-import { hashSync } from "bcrypt";
+import bcrypt from "bcrypt";
 import { db } from "../database/database.connection.js";
 
 export async function signUp(req, res) {
   const { name, phone, cpf, email, password } = req.body;
 
   try {
-    const alreadyExists = await db.query(
-      `SELECT id FROM users WHERE email = $1`
-    );
+    const alreadyExists = `SELECT id FROM users WHERE email = $1`;
     const getExistsValues = [email];
     const result = await db.query(alreadyExists, getExistsValues);
 
     if (result.rowCount > 0)
       return res.status(409).send("Usuário já cadastrado");
 
-    const hash = bcrypt.hash(password, 10);
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(password, saltRounds);
 
     const insertUserQuery = `INSERT INTO users (name, phone, cpf, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, now(), now())`;
     const getUserValues = [name, phone, cpf, email, hash];
     await db.query(insertUserQuery, getUserValues);
     res.sendStatus(201);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 }
 
@@ -37,7 +36,7 @@ export async function signIn(req, res) {
 
     const user = userResult.rows[0];
 
-    const validatePassword = hashSync(password, user.password);
+    const validatePassword = await bcrypt.compare(password, user.password);
 
     if (!validatePassword) return res.sendStatus(401);
 
