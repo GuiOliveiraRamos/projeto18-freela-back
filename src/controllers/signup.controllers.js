@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { db } from "../database/database.connection.js";
+import { v4 as uuidv4 } from "uuid";
 
 export async function signUp(req, res) {
   const { name, phone, cpf, email, password } = req.body;
@@ -38,6 +39,12 @@ export async function signIn(req, res) {
     const validatePassword = bcrypt.compareSync(password, hashedPassword);
 
     if (!validatePassword) return res.sendStatus(401);
+
+    const sessionId = uuidv4();
+
+    const sessionQuery = `INSERT INTO sessions (user_id,session_id,created_at) VALUES ($1, $2, now())`;
+    const sessionValues = [user.id, sessionId];
+    await db.query(sessionQuery, sessionValues);
 
     await db.query(`UPDATE users SET updated_at = now() WHERE id = $1`, [
       user.id,
