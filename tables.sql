@@ -13,8 +13,7 @@ CREATE TABLE users (
 
 CREATE TABLE sessions (
   id SERIAL PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES users(id),
+  user_id INT NOT NULL,
   session_id UUID NOT NULL,
-  expiration TIMESTAMP NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
