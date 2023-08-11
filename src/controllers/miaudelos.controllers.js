@@ -89,9 +89,13 @@ export async function setVacation(req, res) {
   const { id } = req.params;
   const { vacationDate } = req.body;
 
+  console.log("Back-End - Received Date:", vacationDate);
+
   try {
+    const formattedDate = vacationDate.toISOString();
+
     const updateQuery = "UPDATE miaudelos SET return_date = $1 WHERE id = $2";
-    const updateValues = [vacationDate, id];
+    const updateValues = [formattedDate, id];
     await db.query(updateQuery, updateValues);
 
     res.status(200).send("Data de férias atualizada com sucesso");
