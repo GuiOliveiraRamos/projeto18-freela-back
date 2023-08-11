@@ -21,11 +21,12 @@ CREATE TABLE sessions (
 CREATE TABLE miaudelos (
   id SERIAL PRIMARY KEY,
   user_id INT REFERENCES users(id) NOT NULL,
-  session_id UUID REFERENCES sessions(session_id), 
-  image_url VARCHAR(255) NOT NULL,
+  image VARCHAR(255) NOT NULL,
   name VARCHAR(255) NOT NULL,
   description TEXT,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE miaudelos
+ADD COLUMN return_date TIMESTAMP;

@@ -41,15 +41,15 @@ export async function signIn(req, res) {
     if (!validatePassword) return res.sendStatus(401);
 
     const sessionId = uuidv4();
-
     const sessionQuery = `INSERT INTO sessions (user_id,session_id,created_at) VALUES ($1, $2, now())`;
     const sessionValues = [user.id, sessionId];
+
     await db.query(sessionQuery, sessionValues);
 
     await db.query(`UPDATE users SET updated_at = now() WHERE id = $1`, [
       user.id,
     ]);
-    res.sendStatus(200);
+    res.status(200).json({ sessionId });
   } catch (err) {
     res.status(500).send(err.message);
   }
