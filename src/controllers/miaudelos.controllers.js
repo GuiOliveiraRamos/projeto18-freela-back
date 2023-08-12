@@ -88,19 +88,40 @@ export async function deleteMiaudelo(req, res) {
 export async function setVacation(req, res) {
   const { id } = req.params;
   const { vacationDate } = req.body;
+  const convertDate = new Date(vacationDate);
 
   console.log("Back-End - Received Date:", vacationDate);
 
   try {
-    const formattedDate = vacationDate.toISOString();
-
     const updateQuery = "UPDATE miaudelos SET return_date = $1 WHERE id = $2";
-    const updateValues = [formattedDate, id];
+    const updateValues = [convertDate, id];
     await db.query(updateQuery, updateValues);
 
     res.status(200).send("Data de férias atualizada com sucesso");
   } catch (error) {
     console.error("Erro ao atualizar a data de férias:", error);
     res.status(500).send("Erro ao atualizar a data de férias");
+  }
+}
+
+export async function getMiaudeloById(req, res) {
+  const { id } = req.params;
+
+  try {
+    const getMiaudeloQuery = `
+      SELECT miaudelos.*, users.name AS dono, users.phone AS contato
+      FROM miaudelos
+      JOIN users ON miaudelos.user_id = users.id
+      WHERE miaudelos.id = $1`;
+
+    const getMiaudeloValues = [id];
+    const result = await db.query(getMiaudeloQuery, getMiaudeloValues);
+
+    if (result.rowCount === 0) return res.sendStatus(404);
+
+    const miaudelo = result.rows[0];
+    res.json(miaudelo);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 }
