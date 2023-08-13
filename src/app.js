@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import router from "./routes/index.routes.js";
 
+process.env.TZ = "America/Sao_Paulo";
+
 const app = express();
 
 app.use(cors());

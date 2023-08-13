@@ -53,7 +53,9 @@ export async function getMyMiaudelos(req, res) {
 
 export async function getAllMiaudelos(req, res) {
   try {
-    const getMiaudelosQuery = `SELECT * FROM miaudelos`;
+    const getMiaudelosQuery = `SELECT * FROM miaudelos
+    WHERE return_date IS NULL OR return_date < CURRENT_TIMESTAMP;
+    `;
     const result = await db.query(getMiaudelosQuery);
     res.status(200).send(result.rows);
   } catch (err) {
@@ -88,9 +90,10 @@ export async function deleteMiaudelo(req, res) {
 export async function setVacation(req, res) {
   const { id } = req.params;
   const { vacationDate } = req.body;
+
   const convertDate = new Date(vacationDate);
 
-  console.log("Back-End - Received Date:", vacationDate);
+  console.log("Back-End - Received Date:", convertDate);
 
   try {
     const updateQuery = "UPDATE miaudelos SET return_date = $1 WHERE id = $2";
