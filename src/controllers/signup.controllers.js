@@ -3,12 +3,13 @@ import { db } from "../database/database.connection.js";
 import { v4 as uuidv4 } from "uuid";
 
 export async function signUp(req, res) {
-  const { name, phone, cpf, email, password } = req.body;
+  const { name, phone, cpf, email, password, confirmPassword } = req.body;
+}
 
-  try {
-    const alreadyExists = `SELECT id FROM users WHERE email = $1`;
-    const getExistsValues = [email];
-    const result = await db.query(alreadyExists, getExistsValues);
+try {
+  const alreadyExists = await db.query(`SELECT id FROM users WHERE email = $1`);
+  const getValues = [email];
+  const result = await db.query(alreadyExists, getValues);
 
     if (result.rowCount > 0)
       return res.status(409).send("Usuário já cadastrado");
