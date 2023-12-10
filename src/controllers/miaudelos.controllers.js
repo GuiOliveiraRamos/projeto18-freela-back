@@ -93,8 +93,6 @@ export async function setVacation(req, res) {
 
   const convertDate = new Date(vacationDate);
 
-  console.log("Back-End - Received Date:", convertDate);
-
   try {
     const updateQuery = "UPDATE miaudelos SET return_date = $1 WHERE id = $2";
     const updateValues = [convertDate, id];
