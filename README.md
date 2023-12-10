@@ -31,5 +31,6 @@ Express: Framework web para Node.js.
 PostgreSQL: Banco de dados SQL.
 
 Configuração
-Certifique-se de configurar as variáveis de ambiente necessárias no arquivo .env para conectar-se ao banco de dados PostgresSQL e configurar outras opções do servidor.
+Certifique-se de configurar as variáveis de ambiente necessárias no arquivo .env para conectar-se ao banco de dados PostgresSQL e configurar outras opções do servidor
 
+link deploy: https://freela-api-cwkh.onrender.com
