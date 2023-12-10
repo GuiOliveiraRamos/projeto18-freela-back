@@ -6,7 +6,7 @@ export async function signUp(req, res) {
   const { name, phone, cpf, email, password } = req.body;
 
   try {
-    const alreadyExists = `SELECT id FROM users WHERE cpf = $1 OR email = $1`;
+    const alreadyExists = `SELECT id FROM users WHERE email = $1`;
     const getExistsValues = [email];
     const result = await db.query(alreadyExists, getExistsValues);
 
